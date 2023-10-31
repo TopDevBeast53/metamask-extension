@@ -371,6 +371,24 @@ function createScriptTasks({
         shouldLintFenceFiles,
       }),
     );
+
+    if (process.env.ENABLE_MV3) {
+      const offscreenSubtask = createTask(
+        `${taskPrefix}:offscreen`,
+        createOffscreenBundle({ buildTarget }),
+      );
+
+      allSubtasks.push(
+        runInChildProcess(offscreenSubtask, {
+          applyLavaMoat,
+          buildType,
+          isLavaMoat,
+          policyOnly,
+          shouldLintFenceFiles,
+        }),
+      );
+    }
+
     // make a parent task that runs each task in a child thread
     return composeParallel(initiateLiveReload, ...allSubtasks);
   }
@@ -463,6 +481,35 @@ function createScriptTasks({
         applyLavaMoat,
       }),
     );
+  }
+
+  /**
+   * Creates bundles for files needed for implementing the Offscreen document
+   * for communication with hardware wallets, snaps and potentially other
+   * implementations via the chrome.runtime API.
+   *
+   * @param {object} options - The build options.
+   * @param {BUILD_TARGETS} options.buildTarget - The current build target.
+   * @returns {Function} A function that creates the bundle.
+   */
+  function createOffscreenBundle({ buildTarget }) {
+    const bundles = [
+      createNormalBundle({
+        buildTarget,
+        buildType,
+        browserPlatforms,
+        destFilepath: `offscreen/offscreen.js`,
+        entryFilepath: `./offscreen/scripts/offscreen.ts`,
+        label: 'offscreen',
+        ignoredFiles,
+        policyOnly,
+        shouldLintFenceFiles,
+        version,
+        applyLavaMoat,
+      }),
+    ];
+
+    return composeSeries(...bundles);
   }
 }
 
