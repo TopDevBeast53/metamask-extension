@@ -26,7 +26,8 @@ export default {
     },
     danger: {
       control: 'boolean',
-      description: 'Whether or not the confirm button should be styled as a warning',
+      description:
+        'Whether or not the confirm button should be styled as a warning',
       default: false,
     },
     onCancel: {

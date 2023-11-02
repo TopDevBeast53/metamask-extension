@@ -15,12 +15,13 @@ import { useI18nContext } from '../../../../hooks/useI18nContext';
 
 /**
  *
- * @param {string} cancelText - Text for the cancel button
- * @param {string} confirmText - Text for the confirm button
- * @param {boolean} disabled - Whether or not the confirm button should be disabled
- * @param {boolean} danger - Whether or not the confirm button should be styled as a warning
- * @param {function} onCancel - Function to call when the cancel button is clicked
- * @param {function} onConfirm - Function to call when the confirm button is clicked
+ * @param {object} props
+ * @param {string} props.cancelText - Text for the cancel button
+ * @param {string} props.confirmText - Text for the confirm button
+ * @param {boolean} props.disabled - Whether or not the confirm button should be disabled
+ * @param {boolean} props.danger - Whether or not the confirm button should be styled as a warning
+ * @param {Function} props.onCancel - Function to call when the cancel button is clicked
+ * @param {Function} props.onConfirm - Function to call when the confirm button is clicked
  * @returns
  */
 const ConfirmFooter = ({

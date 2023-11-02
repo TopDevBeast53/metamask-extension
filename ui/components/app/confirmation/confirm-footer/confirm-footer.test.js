@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, getAllByRole, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import ConfirmFooter from '.';
 
 describe('ConfirmFooter', () => {
@@ -42,8 +42,12 @@ describe('ConfirmFooter', () => {
 
   it('styles the confirm button as danger when danger is true', () => {
     const { getAllByRole } = render(<ConfirmFooter {...props} danger />);
-    expect(getAllByRole('button')[1]).toHaveClass(' mm-box--background-color-error-default');
-    expect(getAllByRole('button')[0]).not.toHaveClass(' mm-box--background-color-error-default');
+    expect(getAllByRole('button')[1]).toHaveClass(
+      ' mm-box--background-color-error-default',
+    );
+    expect(getAllByRole('button')[0]).not.toHaveClass(
+      ' mm-box--background-color-error-default',
+    );
   });
 
   it('renders correct text and fires events when text is specified in props', () => {
