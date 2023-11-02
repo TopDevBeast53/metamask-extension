@@ -1,5 +1,6 @@
 import React from 'react';
 import ConfirmFooter from '.';
+import { ConfirmFooterProps } from './confirm-footer';
 
 export default {
   title: 'Components/App/Confirmation/ConfirmFooter',
@@ -45,6 +46,6 @@ export default {
   },
 };
 
-export const DefaultStory = (args) => <ConfirmFooter {...args} />;
+export const DefaultStory = (args: ConfirmFooterProps) => <ConfirmFooter {...args} />;
 
 DefaultStory.storyName = 'Default';

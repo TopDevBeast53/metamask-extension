@@ -24,14 +24,19 @@ import { useI18nContext } from '../../../../hooks/useI18nContext';
  * @param {Function} props.onConfirm - Function to call when the confirm button is clicked
  * @returns
  */
-const ConfirmFooter = ({
-  cancelText,
-  confirmText,
-  disabled = false,
-  danger = false,
-  onCancel,
-  onConfirm,
-}) => {
+
+export type ConfirmFooterProps = {
+  cancelText?: string;
+  confirmText?: string;
+  disabled?: boolean;
+  danger?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+};
+
+const ConfirmFooter = (props: ConfirmFooterProps) => {
+  const { cancelText, confirmText, disabled, danger, onCancel, onConfirm } =
+    props;
   const t = useI18nContext();
   return (
     <Box
@@ -39,7 +44,7 @@ const ConfirmFooter = ({
       flexDirection={FlexDirection.Row}
       gap={4}
       padding={4}
-      width={BlockSize.full}
+      width={BlockSize.Full}
     >
       <Button
         variant={ButtonVariant.Secondary}
@@ -60,15 +65,6 @@ const ConfirmFooter = ({
       </Button>
     </Box>
   );
-};
-
-ConfirmFooter.propTypes = {
-  cancelText: PropTypes.string,
-  confirmText: PropTypes.string,
-  disabled: PropTypes.bool,
-  danger: PropTypes.bool,
-  onCancel: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired,
 };
 
 export default ConfirmFooter;
