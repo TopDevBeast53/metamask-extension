@@ -11,6 +11,7 @@ import {
   Display,
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 
 /**
  *
@@ -23,13 +24,14 @@ import {
  * @returns
  */
 const ConfirmFooter = ({
-  cancelText = 'Cancel',
-  confirmText = 'Confirm',
+  cancelText,
+  confirmText,
   disabled = false,
   danger = false,
   onCancel,
   onConfirm,
 }) => {
+  const t = useI18nContext();
   return (
     <Box
       display={Display.Flex}
@@ -44,7 +46,7 @@ const ConfirmFooter = ({
         width={BlockSize.SixTwelfths}
         onClick={onCancel}
       >
-        {cancelText}
+        {cancelText || t('cancel')}
       </Button>
       <Button
         size={ButtonSize.Lg}
@@ -53,7 +55,7 @@ const ConfirmFooter = ({
         disabled={disabled}
         danger={danger}
       >
-        {confirmText}
+        {confirmText || t('confirm')}
       </Button>
     </Box>
   );
@@ -62,6 +64,8 @@ const ConfirmFooter = ({
 ConfirmFooter.propTypes = {
   cancelText: PropTypes.string,
   confirmText: PropTypes.string,
+  disabled: PropTypes.bool,
+  danger: PropTypes.bool,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
 };
