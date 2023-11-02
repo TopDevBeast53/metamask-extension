@@ -1,10 +1,10 @@
 import React from 'react';
-import Footer from '.';
+import ConfirmFooter from '.';
 
 export default {
-  title: 'Components/App/Confirmation/Footer',
+  title: 'Components/App/Confirmation/ConfirmFooter',
   description: 'Generic footer component for confirmation pages',
-  component: Footer,
+  component: ConfirmFooter,
   parameters: {
     controls: { sort: 'alpha' },
   },
@@ -18,6 +18,16 @@ export default {
       control: 'text',
       description: 'Text for the confirm button',
       default: 'Confirm',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Whether or not the confirm button should be disabled',
+      default: false,
+    },
+    danger: {
+      control: 'boolean',
+      description: 'Whether or not the confirm button should be styled as a warning',
+      default: false,
     },
     onCancel: {
       action: 'onCancel',
@@ -34,6 +44,6 @@ export default {
   },
 };
 
-export const DefaultStory = (args) => <Footer {...args} />;
+export const DefaultStory = (args) => <ConfirmFooter {...args} />;
 
 DefaultStory.storyName = 'Default';

@@ -12,9 +12,21 @@ import {
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
 
+/**
+ *
+ * @param {string} cancelText - Text for the cancel button
+ * @param {string} confirmText - Text for the confirm button
+ * @param {boolean} disabled - Whether or not the confirm button should be disabled
+ * @param {boolean} danger - Whether or not the confirm button should be styled as a warning
+ * @param {function} onCancel - Function to call when the cancel button is clicked
+ * @param {function} onConfirm - Function to call when the confirm button is clicked
+ * @returns
+ */
 const ConfirmFooter = ({
   cancelText = 'Cancel',
   confirmText = 'Confirm',
+  disabled = false,
+  danger = false,
   onCancel,
   onConfirm,
 }) => {
@@ -38,6 +50,8 @@ const ConfirmFooter = ({
         size={ButtonSize.Lg}
         width={BlockSize.SixTwelfths}
         onClick={onConfirm}
+        disabled={disabled}
+        danger={danger}
       >
         {confirmText}
       </Button>
