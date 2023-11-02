@@ -22,7 +22,7 @@ import { getAddressBookEntry } from '../../../../../selectors';
 import Confusable from '../../../../ui/confusable';
 import { Tab, Tabs } from '../../../../ui/tabs';
 import { AddressListItem } from '../../../address-list-item';
-import { SendPageAddressBook, SendPageRow, SendPageYourAccount } from '.';
+import { SendPageAddressBook, SendPageRow, SendPageYourAccounts } from '.';
 
 const renderExplicitAddress = (
   address: string,
@@ -93,7 +93,7 @@ export const SendPageRecipient = () => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           <Tab tabKey="accounts" name={t('yourAccounts')}>
-            <SendPageYourAccount />
+            <SendPageYourAccounts />
           </Tab>
         }
         {
