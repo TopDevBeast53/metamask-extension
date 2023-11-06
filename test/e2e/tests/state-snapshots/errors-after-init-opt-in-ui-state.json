@@ -125,6 +125,7 @@
     "permissionActivityLog": "object",
     "subjectMetadata": "object",
     "announcements": "object",
+    "networksList": "object",
     "gasFeeEstimates": {},
     "estimatedGasFeeTimeBounds": {},
     "gasEstimateType": "none",
