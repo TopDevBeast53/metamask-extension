@@ -16,10 +16,10 @@ export function useIsOriginalNativeTokenSymbol(chainId, ticker) {
           (network) => network.chainId === parseInt(networkId, 16),
         );
 
-        const symbol = matchedChain?.nativeCurrency?.symbol ?? null;
+        const matchedSymbol = matchedChain?.nativeCurrency?.symbol ?? null;
 
-        setIsOriginalNativeSymbol(symbol === ticker);
-        return symbol === ticker;
+        setIsOriginalNativeSymbol(matchedSymbol === ticker);
+        return matchedSymbol === ticker;
       } catch (err) {
         return null;
       }

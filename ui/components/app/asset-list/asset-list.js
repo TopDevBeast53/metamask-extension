@@ -15,7 +15,6 @@ import {
   getCurrentChainId,
   getSwapsDefaultToken,
   getSelectedAddress,
-  getIsTestnet,
 } from '../../../selectors';
 import {
   getNativeCurrency,
@@ -56,7 +55,6 @@ const AssetList = ({ onClickAsset }) => {
     chainId,
     ticker,
   );
-  const isTestNet = useSelector(getIsTestnet);
   const trackEvent = useContext(MetaMetricsContext);
   const balance = useSelector(getSelectedAccountCachedBalance);
   const balanceIsLoading = !balance;
@@ -166,11 +164,7 @@ const AssetList = ({ onClickAsset }) => {
               secondaryCurrencyProperties.value
             }
             tokenSymbol={primaryCurrencyProperties.suffix}
-            secondary={
-              isTestNet || (showFiat && isOriginalNativeSymbol)
-                ? secondaryCurrencyDisplay
-                : undefined
-            }
+            secondary={showFiat ? secondaryCurrencyDisplay : undefined}
             tokenImage={balanceIsLoading ? null : primaryTokenImage}
             isOriginalTokenSymbol={isOriginalNativeSymbol}
           />
