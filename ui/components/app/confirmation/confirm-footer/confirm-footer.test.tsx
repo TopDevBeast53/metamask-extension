@@ -1,9 +1,10 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
+import { ConfirmFooterProps } from './confirm-footer.types';
 import ConfirmFooter from '.';
 
 describe('ConfirmFooter', () => {
-  const props = {
+  const props: ConfirmFooterProps = {
     onCancel: jest.fn(),
     onConfirm: jest.fn(),
   };
@@ -35,13 +36,26 @@ describe('ConfirmFooter', () => {
   });
 
   it('disables the confirm button when disabled is true', () => {
-    const { getAllByRole } = render(<ConfirmFooter {...props} disabled />);
+    const propsWithDisabled = {
+      ...props,
+      confirmButtonProps: {
+        disabled: true,
+      },
+    };
+
+    const { getAllByRole } = render(<ConfirmFooter {...propsWithDisabled} />);
     expect(getAllByRole('button')[1]).toBeDisabled();
     expect(getAllByRole('button')[0]).toBeEnabled();
   });
 
   it('styles the confirm button as danger when danger is true', () => {
-    const { getAllByRole } = render(<ConfirmFooter {...props} danger />);
+    const propsWithDanger = {
+      ...props,
+      confirmButtonProps: {
+        danger: true,
+      },
+    };
+    const { getAllByRole } = render(<ConfirmFooter {...propsWithDanger} />);
     expect(getAllByRole('button')[1]).toHaveClass(
       ' mm-box--background-color-error-default',
     );

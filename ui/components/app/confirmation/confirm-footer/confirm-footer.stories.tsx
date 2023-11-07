@@ -1,10 +1,8 @@
-import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import ConfirmFooter from '.';
-import { ConfirmFooterProps } from './confirm-footer';
 
-export default {
+const meta: Meta<typeof ConfirmFooter> = {
   title: 'Components/App/Confirmation/ConfirmFooter',
-  description: 'Generic footer component for confirmation pages',
   component: ConfirmFooter,
   parameters: {
     controls: { sort: 'alpha' },
@@ -20,16 +18,15 @@ export default {
       description: 'Text for the confirm button',
       default: 'Confirm',
     },
-    disabled: {
-      control: 'boolean',
-      description: 'Whether or not the confirm button should be disabled',
-      default: false,
-    },
-    danger: {
-      control: 'boolean',
+    cancelButtonProps: {
+      control: 'object',
       description:
-        'Whether or not the confirm button should be styled as a warning',
-      default: false,
+        'Props for the cancel button. See Button component for details',
+    },
+    confirmButtonProps: {
+      control: 'object',
+      description:
+        'Props for the confirm button. See Button component for details',
     },
     onCancel: {
       action: 'onCancel',
@@ -45,7 +42,9 @@ export default {
     confirmText: 'Confirm',
   },
 };
+export default meta;
+type Story = StoryObj<typeof ConfirmFooter>;
 
-export const DefaultStory = (args: ConfirmFooterProps) => <ConfirmFooter {...args} />;
-
-DefaultStory.storyName = 'Default';
+// 👇 Throws a type error it the args don't match the component props
+export const DefaultStory: Story = {};
+DefaultStory.name = 'Default';

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import {
   Box,
   Button,
@@ -12,54 +12,44 @@ import {
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
+import { BoxProps } from '../../../component-library/box';
+import { ConfirmFooterProps } from './confirm-footer.types';
 
-/**
- *
- * @param {object} props
- * @param {string} props.cancelText - Text for the cancel button
- * @param {string} props.confirmText - Text for the confirm button
- * @param {boolean} props.disabled - Whether or not the confirm button should be disabled
- * @param {boolean} props.danger - Whether or not the confirm button should be styled as a warning
- * @param {Function} props.onCancel - Function to call when the cancel button is clicked
- * @param {Function} props.onConfirm - Function to call when the confirm button is clicked
- * @returns
- */
-
-export type ConfirmFooterProps = {
-  cancelText?: string;
-  confirmText?: string;
-  disabled?: boolean;
-  danger?: boolean;
-  onCancel: () => void;
-  onConfirm: () => void;
-};
-
-const ConfirmFooter = (props: ConfirmFooterProps) => {
-  const { cancelText, confirmText, disabled, danger, onCancel, onConfirm } =
-    props;
+const ConfirmFooter: React.FC<ConfirmFooterProps> = ({
+  className = '',
+  cancelText,
+  confirmText,
+  onCancel,
+  onConfirm,
+  confirmButtonProps,
+  cancelButtonProps,
+  ...props
+}) => {
   const t = useI18nContext();
   return (
     <Box
+      className={classnames('confirm-footer', className)}
       display={Display.Flex}
       flexDirection={FlexDirection.Row}
       gap={4}
       padding={4}
       width={BlockSize.Full}
+      {...(props as BoxProps<'div'>)}
     >
       <Button
         variant={ButtonVariant.Secondary}
         size={ButtonSize.Lg}
-        width={BlockSize.SixTwelfths}
+        block
         onClick={onCancel}
+        {...cancelButtonProps}
       >
         {cancelText || t('cancel')}
       </Button>
       <Button
         size={ButtonSize.Lg}
-        width={BlockSize.SixTwelfths}
+        block
         onClick={onConfirm}
-        disabled={disabled}
-        danger={danger}
+        {...confirmButtonProps}
       >
         {confirmText || t('confirm')}
       </Button>
