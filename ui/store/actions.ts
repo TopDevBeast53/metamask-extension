@@ -4640,6 +4640,14 @@ export function setSnapsInstallPrivacyWarningShownStatus(shown: boolean) {
 }
 ///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:ONLY_INCLUDE_IN(build-flask)
+export function trackInsightSnapUsage(snapId: string) {
+  return async () => {
+    await submitRequestToBackground('trackInsightSnapView', [snapId]);
+  };
+}
+///: END:ONLY_INCLUDE_IN
+
 ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
 export async function setSnapsAddSnapAccountModalDismissed() {
   await submitRequestToBackground('setSnapsAddSnapAccountModalDismissed', [
