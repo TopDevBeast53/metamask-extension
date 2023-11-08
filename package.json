@@ -293,6 +293,9 @@
     "@sentry/integrations": "^7.53.0",
     "@sentry/types": "^7.53.0",
     "@sentry/utils": "^7.53.0",
+    "@trezor/connect-web": "9.0.6",
+    "@truffle/codec": "^0.14.12",
+    "@truffle/decoder": "^5.3.5",
     "@zxing/browser": "^0.1.3",
     "@zxing/library": "0.20.0",
     "await-semaphore": "^0.1.1",
@@ -629,7 +632,12 @@
       "@storybook/manager-webpack5>core-js": false,
       "@storybook/react-webpack5>@storybook/preset-react-webpack>@pmmmwh/react-refresh-webpack-plugin>core-js-pure": false,
       "ethjs-contract>babel-runtime>core-js": false,
-      "ts-node>@swc/core": false
+      "ts-node>@swc/core": false,
+      "@trezor/connect-web>@trezor/connect>@trezor/protobuf>protobufjs": false,
+      "@trezor/connect-web>@trezor/connect>@trezor/transport>usb": false,
+      "@trezor/connect-web>@trezor/connect>@trezor/utxo-lib>blake-hash": false,
+      "@trezor/connect-web>@trezor/connect>@trezor/utxo-lib>tiny-secp256k1": false,
+      "@trezor/connect-web>@trezor/connect>@trezor/transport>protobufjs": false
     }
   },
   "packageManager": "yarn@4.0.0-rc.48"

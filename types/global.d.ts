@@ -2,6 +2,16 @@
 // declared using var and not const or let, which is why this rule is disabled
 /* eslint-disable no-var */
 import * as Sentry from '@sentry/browser';
+import {
+  Success,
+  Unsuccessful,
+  PROTO,
+  EthereumSignedTx,
+  Params,
+  EthereumSignTransaction,
+  EthereumSignTypedHash,
+  EthereumSignMessage,
+} from '@trezor/connect-web';
 
 declare class Platform {
   openTab: (opts: { url: string }) => void;
@@ -23,23 +33,84 @@ declare class MessageSender {
   url?: string;
 }
 
+type ResponseType =
+  | Unsuccessful
+  | Success<{ publicKey: string; chainCode: string }>
+  | Success<EthereumSignedTx>
+  | Success<PROTO.MessageSignature>
+  | Success<PROTO.EthereumTypedDataSignature>
+  | Record<string, unknown>;
+
+interface sendMessage {
+  (
+    extensionId: string,
+    message: Record<string, unknown>,
+    options?: Record<string, unknown>,
+    callback?: (response: Record<string, unknown>) => void,
+  ): void;
+  (
+    message: any,
+    options?: Record<string, unknown>,
+    callback?: (response: Record<string, unknown>) => void,
+  ): void;
+  <T extends EthereumSignTypedDataTypes>(
+    message: {
+      target: OffscreenCommunicationTarget.trezorOffscreen;
+      action: TrezorAction.signTypedData;
+      params: Params<EthereumSignTypedHash<T>>;
+    },
+    callback: (
+      response: Unsuccessful | Success<PROTO.EthereumTypedDataSignature>,
+    ) => void,
+  );
+  (
+    message: {
+      target: OffscreenCommunicationTarget.trezorOffscreen;
+      action: TrezorAction.signTransaction;
+      params: Params<EthereumSignTransaction>;
+    },
+    callback: (response: Unsuccessful | Success<EthereumSignedTx>) => void,
+  );
+  (
+    message: {
+      target: OffscreenCommunicationTarget.trezorOffscreen;
+      action: TrezorAction.signMessage;
+      params: Params<EthereumSignMessage>;
+    },
+    callback: (
+      response: Unsuccessful | Success<PROTO.MessageSignature>,
+    ) => void,
+  );
+  (
+    message: {
+      target: OffscreenCommunicationTarget.trezorOffscreen;
+      action: TrezorAction.getPublicKey;
+      params: { path: string; coin: string };
+    },
+    callback: (
+      response:
+        | Unsuccessful
+        | Success<{ publicKey: string; chainCode: string }>,
+    ) => void,
+  );
+  (
+    message: Record<string, unknown>,
+    callback?: (response: ResponseType) => void,
+  ): void;
+}
+
 declare class Runtime {
   onMessage: {
     addListener: (
       callback: (
         message: any,
         sender: MessageSender,
-        sendResponse: (response: any) => void,
+        sendResponse: (response?: ResponseType) => void,
       ) => void,
     ) => void;
   };
 
-  sendMessage: (
-    extensionId?: string,
-    message: any,
-    options?: Record<string, unknown>,
-    callback?: (response: any) => void,
-  ) => void;
+  sendMessage: sendMessage;
 }
 
 declare class Chrome {

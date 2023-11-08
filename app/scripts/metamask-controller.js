@@ -282,6 +282,7 @@ import { IndexedDBPPOMStorage } from './lib/ppom/indexed-db-backend';
 import { updateCurrentLocale } from './translate';
 ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
 import { snapKeyringBuilder, getAccountsBySnapId } from './lib/snap-keyring';
+import { TrezorOffscreenBridge } from './lib/offscreen-bridge/trezor-offscreen-bridge';
 ///: END:ONLY_INCLUDE_IN
 
 export const METAMASK_CONTROLLER_EVENTS = {
@@ -951,6 +952,10 @@ export default class MetamaskController extends EventEmitter {
         );
       }
       ///: END:ONLY_INCLUDE_IN
+    } else if (isManifestV3) {
+      additionalKeyrings.push(
+        hardwareKeyringBuilderFactory(TrezorKeyring, TrezorOffscreenBridge),
+      );
     }
 
     ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
@@ -3487,6 +3492,7 @@ export default class MetamaskController extends EventEmitter {
     const keyringOverrides = this.opts.overrides?.keyrings;
     let keyringName = null;
     if (
+      deviceName !== HardwareDeviceNames.trezor &&
       deviceName !== HardwareDeviceNames.QR &&
       !this.canUseHardwareWallets()
     ) {

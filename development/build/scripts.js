@@ -493,21 +493,21 @@ function createScriptTasks({
    * @returns {Function} A function that creates the bundle.
    */
   function createOffscreenBundle({ buildTarget }) {
-    const bundles = [
-      createNormalBundle({
+    const bundles = ['offscreen', 'trezor-iframe'].map((label) => {
+      return createNormalBundle({
         buildTarget,
         buildType,
         browserPlatforms,
-        destFilepath: `offscreen/offscreen.js`,
-        entryFilepath: `./offscreen/scripts/offscreen.ts`,
-        label: 'offscreen',
+        destFilepath: `offscreen/${label}.js`,
+        entryFilepath: `./offscreen/scripts/${label}.ts`,
+        label,
         ignoredFiles,
         policyOnly,
         shouldLintFenceFiles,
         version,
         applyLavaMoat,
-      }),
-    ];
+      });
+    });
 
     return composeSeries(...bundles);
   }
