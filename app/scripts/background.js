@@ -28,6 +28,7 @@ import {
   ENVIRONMENT_TYPE_FULLSCREEN,
   EXTENSION_MESSAGES,
   PLATFORM_FIREFOX,
+  MESSAGE_TYPE,
   ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
   SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES,
   ///: END:ONLY_INCLUDE_IN
@@ -103,6 +104,7 @@ const openMetamaskTabsIDs = {};
 const requestAccountTabIds = {};
 let controller;
 let versionedData;
+let visitedSiteData = [];
 
 if (inTest || process.env.METAMASK_DEBUG) {
   global.stateHooks.metamaskGetState = localStore.get.bind(localStore);
@@ -661,14 +663,50 @@ export function setupController(
         connectionStream: portStream,
       });
     } else {
+      // this is triggered when a new tab is opened, or origin(url) is changed
       if (remotePort.sender && remotePort.sender.tab && remotePort.sender.url) {
         const tabId = remotePort.sender.tab.id;
         const url = new URL(remotePort.sender.url);
         const { origin } = url;
 
         remotePort.onMessage.addListener((msg) => {
-          if (msg.data && msg.data.method === 'eth_requestAccounts') {
-            requestAccountTabIds[origin] = tabId;
+          if (msg.data) {
+            const currentSiteData = { tabId, origin };
+            if (msg.data.method === MESSAGE_TYPE.ETH_REQUEST_ACCOUNTS) {
+              requestAccountTabIds[origin] = tabId;
+            }
+
+            // Temporary solution to send only when first visited the dapp
+            // Also using msg.data.method to identify the type of site is a dapp
+            if (
+              !visitedSiteData.includes(currentSiteData.origin) &&
+              (msg.data.method !== MESSAGE_TYPE.SEND_METADATA ||
+                msg.data.method !== MESSAGE_TYPE.GET_PROVIDER_STATE)
+            ) {
+              const numberOfTotalAccounts = Object.keys(
+                controller.preferencesController.store.getState().identities,
+              ).length;
+              const connectSitePermissions =
+                controller.permissionController.state.subjects[origin];
+              const numberOfConnectedAccounts = connectSitePermissions
+                ? connectSitePermissions.permissions.eth_accounts.caveats[0]
+                    .value.length
+                : 0;
+
+              controller.metaMetricsController.trackEvent({
+                event: MetaMetricsEventName.DappViewed,
+                category: MetaMetricsEventCategory.InpageProvider,
+                referrer: {
+                  url: origin,
+                },
+                properties: {
+                  number_of_accounts: numberOfTotalAccounts,
+                  number_of_accounts_connected: numberOfConnectedAccounts,
+                },
+              });
+
+              visitedSiteData.push(origin);
+            }
           }
         });
       }
