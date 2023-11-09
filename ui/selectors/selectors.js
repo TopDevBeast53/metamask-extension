@@ -2,11 +2,10 @@
 import { SubjectType } from '@metamask/permission-controller';
 ///: END:ONLY_INCLUDE_IN
 import { ApprovalType } from '@metamask/controller-utils';
-import {
-  ///: BEGIN:ONLY_INCLUDE_IN(snaps)
-  memoize,
-  ///: END:ONLY_INCLUDE_IN
-} from 'lodash';
+///: BEGIN:ONLY_INCLUDE_IN(snaps)
+import { memoize } from 'lodash';
+import semver from 'semver';
+///: END:ONLY_INCLUDE_IN
 import { createSelector } from 'reselect';
 import { NameType } from '@metamask/name-controller';
 import { addHexPrefix } from '../../app/scripts/lib/util';
@@ -716,6 +715,49 @@ export function getTargetSubjectMetadata(state, origin) {
 export function getSnapRegistryData(state, snapId) {
   const snapsRegistryData = state.metamask.database.verifiedSnaps;
   return snapsRegistryData ? snapsRegistryData[snapId] : null;
+}
+
+/**
+ * Find and return Snap's latest version available in registry.
+ *
+ * @param state - Redux state object.
+ * @param snapId - ID of a Snap.
+ * @returns String SemVer version.
+ */
+export function getSnapLatestVersion(state, snapId) {
+  const snapRegistryData = getSnapRegistryData(state, snapId);
+
+  if (!snapRegistryData) {
+    return null;
+  }
+
+  return Object.keys(snapRegistryData.versions).reduce((latest, version) => {
+    return semver.gt(version, latest) ? version : latest;
+  }, '0.0.0');
+}
+
+/**
+ * Return a Map of all installed Snaps with available update status.
+ *
+ * @param state - Redux state object.
+ * @returns Map Snap IDs mapped to a boolean value (true if update is available, false otherwise).
+ */
+export function getAllSnapsAvailableUpdateStatus(state) {
+  const snapMap = new Map();
+  const installedSnaps = state.metamask.snaps;
+
+  Object.keys(installedSnaps).forEach((snapId) => {
+    const latestVersion = getSnapLatestVersion(state, snapId);
+
+    snapMap.set(
+      snapId,
+      latestVersion
+        ? semver.gt(latestVersion, installedSnaps[snapId].version)
+        : false,
+    );
+  });
+
+  return snapMap;
 }
 
 export function getRpcPrefsForCurrentProvider(state) {
