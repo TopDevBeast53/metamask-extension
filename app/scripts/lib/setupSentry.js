@@ -160,6 +160,7 @@ export const SENTRY_BACKGROUND_STATE = {
     chainStatus: true,
     securityAlertsEnabled: false,
     storageMetadata: [],
+    versionFileETag: false,
     versionInfo: [],
   },
   PermissionController: {
@@ -205,6 +206,7 @@ export const SENTRY_BACKGROUND_STATE = {
     useNonceField: true,
     usePhishDetect: true,
     useTokenDetection: true,
+    useRequestQueue: true,
   },
   SelectedNetworkController: { domains: true, perDomainNetwork: false },
   SignatureController: {

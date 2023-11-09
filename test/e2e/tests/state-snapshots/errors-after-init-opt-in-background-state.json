@@ -119,7 +119,8 @@
     "storageMetadata": {},
     "chainStatus": {
       "0x539": { "chainId": "0x539", "dataFetched": false, "versionInfo": [] }
-    }
+    },
+    "versionFileETag": "string"
   },
   "PermissionController": { "subjects": "object" },
   "PermissionLogController": {
@@ -133,6 +134,7 @@
     "dismissSeedBackUpReminder": true,
     "disabledRpcMethodPreferences": { "eth_sign": false },
     "useMultiAccountBalanceChecker": true,
+    "useRequestQueue": false,
     "useSafeChainsListValidation": "boolean",
     "useTokenDetection": false,
     "useNftDetection": false,
@@ -165,7 +167,12 @@
     "isLineaMainnetReleased": true,
     "selectedAddress": "string"
   },
-  "SelectedNetworkController": { "domains": {}, "perDomainNetwork": "boolean" },
+  "SelectedNetworkController": {
+    "domains": {
+      "metamask": "networkConfigurationId"
+    },
+    "perDomainNetwork": "boolean"
+  },
   "SignatureController": {
     "unapprovedMsgs": "object",
     "unapprovedPersonalMsgs": "object",
