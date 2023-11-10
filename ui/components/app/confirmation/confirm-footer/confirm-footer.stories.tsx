@@ -48,3 +48,34 @@ type Story = StoryObj<typeof ConfirmFooter>;
 // 👇 Throws a type error it the args don't match the component props
 export const DefaultStory: Story = {};
 DefaultStory.name = 'Default';
+
+export const CancelTextConfirmText: Story = {
+  args: {
+    cancelText: 'Reject',
+    confirmText: 'Sign',
+  },
+};
+
+export const CancelButtonButtonProps: Story = {
+  args: {
+    cancelButtonProps: { 'data-testid': 'cancel-button' },
+    cancelText: 'Reject',
+    confirmText: 'Sign',
+  },
+};
+
+export const ConfirmButtonDisabledButtonProps: Story = {
+  args: {
+    confirmButtonProps: { disabled: true, 'data-testid': 'confirm-button' },
+    cancelText: 'Reject',
+    confirmText: 'Sign',
+  },
+};
+
+export const ConfirmButtonDangerButtonProps: Story = {
+  args: {
+    confirmButtonProps: { danger: true, 'data-testid': 'confirm-button' },
+    cancelText: 'Reject',
+    confirmText: 'Sign',
+  },
+};

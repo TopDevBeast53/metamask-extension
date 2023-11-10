@@ -38,10 +38,10 @@ const ConfirmFooter: React.FC<ConfirmFooterProps> = ({
     >
       <Button
         variant={ButtonVariant.Secondary}
-        size={ButtonSize.Lg}
         block
         onClick={onCancel}
         {...cancelButtonProps}
+        size={ButtonSize.Lg || cancelButtonProps?.size}
       >
         {cancelText || t('cancel')}
       </Button>
