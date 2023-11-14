@@ -1,9 +1,11 @@
 const { strict: assert } = require('assert');
 const {
+  DAPP_URL,
   defaultGanacheOptions,
-  withFixtures,
   switchToNotificationWindow,
   switchToOrOpenDapp,
+  withFixtures,
+  unlockWallet,
 } = require('../helpers');
 const FixtureBuilder = require('../fixture-builder');
 
@@ -16,15 +18,14 @@ describe('wallet_requestPermissions', function () {
           .withPermissionControllerConnectedToTestDapp()
           .build(),
         ganacheOptions: defaultGanacheOptions,
-        title: this.test.title,
+        title: this.test.fullTitle(),
       },
       async ({ driver }) => {
         await driver.navigate();
-        await driver.fill('#password', 'correct horse battery staple');
-        await driver.press('#password', driver.Key.ENTER);
+        await unlockWallet(driver);
 
         // wallet_requestPermissions
-        await driver.openNewPage(`http://127.0.0.1:8080`);
+        await driver.openNewPage(DAPP_URL);
 
         const requestPermissionsRequest = JSON.stringify({
           jsonrpc: '2.0',

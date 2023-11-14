@@ -1,5 +1,5 @@
 const { strict: assert } = require('assert');
-const { withFixtures, defaultGanacheOptions } = require('../helpers');
+const { DAPP_URL, defaultGanacheOptions, withFixtures } = require('../helpers');
 const FixtureBuilder = require('../fixture-builder');
 
 describe('eth_sendTransaction', function () {
@@ -17,7 +17,7 @@ describe('eth_sendTransaction', function () {
           .withPermissionControllerConnectedToTestDapp()
           .build(),
         ganacheOptions,
-        title: this.test.title,
+        title: this.test.fullTitle(),
       },
       async ({ driver }) => {
         await driver.navigate();
@@ -25,7 +25,7 @@ describe('eth_sendTransaction', function () {
         await driver.press('#password', driver.Key.ENTER);
 
         // eth_sendTransaction
-        await driver.openNewPage(`http://127.0.0.1:8080`);
+        await driver.openNewPage(DAPP_URL);
         const request = JSON.stringify({
           jsonrpc: '2.0',
           method: 'eth_sendTransaction',
@@ -64,7 +64,7 @@ describe('eth_sendTransaction', function () {
           .withPermissionControllerConnectedToTestDapp()
           .build(),
         ganacheOptions,
-        title: this.test.title,
+        title: this.test.fullTitle(),
       },
       async ({ driver }) => {
         await driver.navigate();

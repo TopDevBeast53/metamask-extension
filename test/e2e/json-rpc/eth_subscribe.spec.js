@@ -1,5 +1,10 @@
 const { strict: assert } = require('assert');
-const { withFixtures, defaultGanacheOptions } = require('../helpers');
+const {
+  DAPP_URL,
+  defaultGanacheOptions,
+  unlockWallet,
+  withFixtures,
+} = require('../helpers');
 const FixtureBuilder = require('../fixture-builder');
 
 describe('eth_subscribe', function () {
@@ -11,15 +16,14 @@ describe('eth_subscribe', function () {
           .withPermissionControllerConnectedToTestDapp()
           .build(),
         ganacheOptions: defaultGanacheOptions,
-        title: this.test.title,
+        title: this.test.fullTitle(),
       },
       async ({ driver }) => {
         await driver.navigate();
-        await driver.fill('#password', 'correct horse battery staple');
-        await driver.press('#password', driver.Key.ENTER);
+        await unlockWallet(driver);
 
         // eth_subscribe
-        await driver.openNewPage(`http://127.0.0.1:8080`);
+        await driver.openNewPage(DAPP_URL);
 
         const subscribeRequest = JSON.stringify({
           jsonrpc: '2.0',

@@ -87,7 +87,6 @@ import { decimalToHex } from '../../shared/modules/conversion.utils';
 import { TxGasFees, PriorityLevels } from '../../shared/constants/gas';
 import {
   TransactionMeta,
-  TransactionMetaMetricsEvent,
   TransactionType,
 } from '../../shared/constants/transaction';
 import { NetworkType, RPCDefinition } from '../../shared/constants/network';
@@ -107,7 +106,7 @@ import {
   generateActionId,
   callBackgroundMethod,
   submitRequestToBackground,
-} from './action-queue';
+} from './background-connection';
 import {
   MetaMaskReduxDispatch,
   MetaMaskReduxState,
@@ -980,7 +979,6 @@ export function addTransactionAndRouteToConfirmationPage(
       const transactionMeta = await submitRequestToBackground<TransactionMeta>(
         'addTransaction',
         [txParams, { ...options, actionId, origin: ORIGIN_METAMASK }],
-        actionId,
       );
 
       dispatch(showConfTxPage());
@@ -1032,7 +1030,6 @@ export async function addTransactionAndWaitForPublish(
         actionId,
       },
     ],
-    actionId,
   );
 }
 
@@ -1193,10 +1190,6 @@ export function removeSnap(
       dispatch(hideLoadingIndication());
     }
   };
-}
-
-export async function removeSnapError(msgData: string): Promise<void> {
-  return submitRequestToBackground('removeSnapError', [msgData]);
 }
 
 export async function handleSnapRequest(args: {
@@ -2084,15 +2077,15 @@ export function createCancelTransaction(
             return;
           }
           if (newState) {
-            const currentNetworkTxList =
-              getCurrentNetworkTransactions(newState);
+            const currentNetworkTxList = getCurrentNetworkTransactions({
+              metamask: newState,
+            });
             const { id } =
               currentNetworkTxList[currentNetworkTxList.length - 1];
             newTxId = id;
             resolve(newState);
           }
         },
-        actionId,
       );
     })
       .then((newState) => dispatch(updateMetamaskState(newState)))
@@ -2128,7 +2121,6 @@ export function createSpeedUpTransaction(
             resolve(newState);
           }
         },
-        actionId,
       );
     })
       .then((newState) => dispatch(updateMetamaskState(newState)))
@@ -2177,7 +2169,6 @@ export function setProviderType(
 ): ThunkAction<void, MetaMaskReduxState, unknown, AnyAction> {
   return async (dispatch: MetaMaskReduxDispatch) => {
     log.debug(`background.setProviderType`, type);
-
     try {
       await submitRequestToBackground('setProviderType', [type]);
     } catch (error) {
@@ -2855,15 +2846,6 @@ export function setCompletedOnboarding(): ThunkAction<
 export function completeOnboarding() {
   return {
     type: actionConstants.COMPLETE_ONBOARDING,
-  };
-}
-
-export function setMouseUserState(
-  isMouseUser: boolean,
-): PayloadAction<boolean> {
-  return {
-    type: actionConstants.SET_MOUSE_USER_STATE,
-    payload: isMouseUser,
   };
 }
 
@@ -4142,13 +4124,13 @@ export function createEventFragment(
 
 export function createTransactionEventFragment(
   transactionId: string,
-  event: TransactionMetaMetricsEvent,
 ): Promise<string> {
   const actionId = generateActionId();
   return submitRequestToBackground('createTransactionEventFragment', [
-    transactionId,
-    event,
-    actionId,
+    {
+      transactionId,
+      actionId,
+    },
   ]);
 }
 
@@ -4471,7 +4453,40 @@ export async function setAddSnapAccountEnabled(value: boolean): Promise<void> {
     logErrorWithMessage(error);
   }
 }
+
+export function showKeyringSnapRemovalModal(payload: {
+  snapName: string;
+  result: 'success' | 'failed';
+}) {
+  return {
+    type: actionConstants.SHOW_KEYRING_SNAP_REMOVAL_RESULT,
+    payload,
+  };
+}
+
+export function hideKeyringRemovalResultModal() {
+  return {
+    type: actionConstants.HIDE_KEYRING_SNAP_REMOVAL_RESULT,
+  };
+}
+
+export async function getSnapAccountsById(snapId: string): Promise<string[]> {
+  const addresses: string[] = await submitRequestToBackground(
+    'getAccountsBySnapId',
+    [snapId],
+  );
+
+  return addresses;
+}
 ///: END:ONLY_INCLUDE_IN
+
+export function setUseRequestQueue(val: boolean): void {
+  try {
+    submitRequestToBackground('setUseRequestQueue', [val]);
+  } catch (error) {
+    logErrorWithMessage(error);
+  }
+}
 
 ///: BEGIN:ONLY_INCLUDE_IN(petnames)
 export function setUseExternalNameSources(val: boolean): void {
@@ -4616,6 +4631,14 @@ export function setSnapsInstallPrivacyWarningShownStatus(shown: boolean) {
       'setSnapsInstallPrivacyWarningShownStatus',
       [shown],
     );
+  };
+}
+///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(build-flask)
+export function trackInsightSnapUsage(snapId: string) {
+  return async () => {
+    await submitRequestToBackground('trackInsightSnapView', [snapId]);
   };
 }
 ///: END:ONLY_INCLUDE_IN
