@@ -4706,6 +4706,9 @@
   "submitted": {
     "message": "Submitted"
   },
+  "suggestedTokenSymbol":{
+    "message": "Suggested ticker symbol:"
+  },
   "support": {
     "message": "Support"
   },
