@@ -177,7 +177,7 @@ async function createOffscreen() {
   }
 
   await chrome.offscreen.createDocument({
-    url: './offscreen/offscreen.html',
+    url: './offscreen.html',
     reasons: ['IFRAME_SCRIPTING'],
     justification:
       'Used for Hardware Wallet and Snaps scripts to communicate with the extension.',

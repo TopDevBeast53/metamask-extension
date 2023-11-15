@@ -378,6 +378,14 @@ function createScriptTasks({
         createOffscreenBundle({ buildTarget }),
       );
 
+      renderJavaScriptLoader({
+        groupSet: ['offscreen'],
+        commonSet: [],
+        browserPlatforms,
+        applyLavaMoat,
+        destinationFileName: 'load-offscreen.js',
+      });
+
       allSubtasks.push(
         runInChildProcess(offscreenSubtask, {
           applyLavaMoat,
@@ -498,7 +506,7 @@ function createScriptTasks({
         buildTarget,
         buildType,
         browserPlatforms,
-        destFilepath: `offscreen/offscreen.js`,
+        destFilepath: `offscreen.js`,
         entryFilepath: `./offscreen/scripts/offscreen.ts`,
         label: 'offscreen',
         ignoredFiles,

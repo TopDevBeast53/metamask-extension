@@ -207,7 +207,7 @@ function getCopyTargets(
     {
       src: `./offscreen/`,
       pattern: `*.html`,
-      dest: `offscreen/`,
+      dest: '',
     },
   ];
 
