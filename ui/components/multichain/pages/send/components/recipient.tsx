@@ -99,7 +99,11 @@ export const SendPageRecipient = () => {
         {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          <Tab tabKey="contacts" name={t('contacts')}>
+          <Tab
+            tabKey="contacts"
+            name={t('contacts')}
+            data-testid="send-contacts-tab"
+          >
             <SendPageAddressBook />
           </Tab>
         }
