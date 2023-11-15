@@ -378,13 +378,13 @@ function createScriptTasks({
         createOffscreenBundle({ buildTarget }),
       );
 
-      renderJavaScriptLoader({
-        groupSet: ['offscreen'],
-        commonSet: [],
-        browserPlatforms,
-        applyLavaMoat,
-        destinationFileName: 'load-offscreen.js',
-      });
+      // renderJavaScriptLoader({
+      //   groupSet: ['offscreen'],
+      //   commonSet: [],
+      //   browserPlatforms,
+      //   applyLavaMoat,
+      //   destinationFileName: 'load-offscreen.js',
+      // });
 
       allSubtasks.push(
         runInChildProcess(offscreenSubtask, {
@@ -847,6 +847,16 @@ function createFactoredBuild({
         }
       }
     });
+
+    if (process.env.ENABLE_MV3) {
+      renderJavaScriptLoader({
+        groupSet: ['offscreen'],
+        commonSet: [],
+        browserPlatforms,
+        applyLavaMoat,
+        destinationFileName: 'load-offscreen.js',
+      });
+    }
 
     await createBundle(buildConfiguration, { reloadOnChange });
   };
