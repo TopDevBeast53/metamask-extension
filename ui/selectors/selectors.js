@@ -760,6 +760,17 @@ export function getAllSnapsAvailableUpdateStatus(state) {
   return snapMap;
 }
 
+/**
+ * Return status of Snaps update availability for any installed Snap.
+ *
+ * @param state - Redux state object.
+ * @returns boolean true if update is available, false otherwise.
+ */
+export function getSnapsUpdateAvailableStatus(state) {
+  const snapMap = getAllSnapsAvailableUpdateStatus(state);
+  return [...snapMap.values()].some((value) => value === true);
+}
+
 export function getRpcPrefsForCurrentProvider(state) {
   const { rpcPrefs } = getProviderConfig(state);
   return rpcPrefs || {};

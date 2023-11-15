@@ -799,4 +799,10 @@ describe('Selectors', () => {
       'npm:@metamask/test-snap-bip44': true,
     });
   });
+
+  it('#getSnapsUpdateAvailableStatus', () => {
+    expect(selectors.getSnapsUpdateAvailableStatus(mockState)).toStrictEqual(
+      true,
+    );
+  });
 });
