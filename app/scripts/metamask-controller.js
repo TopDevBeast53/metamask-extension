@@ -236,7 +236,7 @@ import {
 } from './lib/rpc-method-middleware';
 import createOriginMiddleware from './lib/createOriginMiddleware';
 import createTabIdMiddleware from './lib/createTabIdMiddleware';
-import { NetworksOrderController } from './controllers/networks-order';
+import { NetworkOrderController } from './controllers/network-order';
 import createOnboardingMiddleware from './lib/createOnboardingMiddleware';
 import { setupMultiplex } from './lib/stream-utils';
 import EnsController from './controllers/ens';
@@ -815,13 +815,13 @@ export default class MetamaskController extends EventEmitter {
       state: initState.AnnouncementController,
     });
 
-    const networksOrderMessenger = this.controllerMessenger.getRestricted({
-      name: 'NetworksOrderController',
+    const networkOrderMessenger = this.controllerMessenger.getRestricted({
+      name: 'NetworkOrderController',
       allowedEvents: ['NetworkController:stateChange'],
     });
-    this.networksOrderController = new NetworksOrderController({
-      messenger: networksOrderMessenger,
-      state: initState.NetworksOrderController,
+    this.networkOrderController = new NetworkOrderController({
+      messenger: networkOrderMessenger,
+      state: initState.NetworkOrderController,
     });
     // token exchange rate tracker
     this.tokenRatesController = new TokenRatesController(
@@ -1767,7 +1767,7 @@ export default class MetamaskController extends EventEmitter {
       PermissionLogController: this.permissionLogController.store,
       SubjectMetadataController: this.subjectMetadataController,
       AnnouncementController: this.announcementController,
-      NetworksOrderController: this.networksOrderController,
+      NetworkOrderController: this.networkOrderController,
       GasFeeController: this.gasFeeController,
       TokenListController: this.tokenListController,
       TokensController: this.tokensController,
@@ -1818,7 +1818,7 @@ export default class MetamaskController extends EventEmitter {
         PermissionLogController: this.permissionLogController.store,
         SubjectMetadataController: this.subjectMetadataController,
         AnnouncementController: this.announcementController,
-        NetworksOrderController: this.networksOrderController,
+        NetworkOrderController: this.networkOrderController,
         GasFeeController: this.gasFeeController,
         TokenListController: this.tokenListController,
         TokensController: this.tokensController,
@@ -5250,7 +5250,7 @@ export default class MetamaskController extends EventEmitter {
 
   updateNetworksList = (sortedNetworkList) => {
     try {
-      this.networksOrderController.updateNetworksList(sortedNetworkList);
+      this.networkOrderController.updateNetworksList(sortedNetworkList);
     } catch (err) {
       log.error(err.message);
       throw err;

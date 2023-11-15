@@ -1092,7 +1092,7 @@ export function getSortedAnnouncementsToShow(state) {
 }
 
 export function getOrderedNetworksList(state) {
-  return state.metamask.networksList;
+  return state.metamask.orderedNetworkList;
 }
 export function getShowRecoveryPhraseReminder(state) {
   const {

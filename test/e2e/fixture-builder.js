@@ -153,8 +153,8 @@ function defaultFixture() {
           ///: END:ONLY_INCLUDE_IN
         },
       },
-      NetworksOrderController: {
-        networksList: [],
+      NetworkOrderController: {
+        orderedNetworkList: [],
       },
       AppStateController: {
         browserEnvironment: {},
@@ -451,8 +451,8 @@ class FixtureBuilder {
     return this;
   }
 
-  withNetworksOrderController(data) {
-    merge(this.fixture.data.NetworksOrderController, data);
+  withNetworkOrderController(data) {
+    merge(this.fixture.data.NetworkOrderController, data);
     return this;
   }
 
