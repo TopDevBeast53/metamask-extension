@@ -6,6 +6,8 @@ import {
   WALLET_SNAP_PERMISSION_KEY,
 } from '@metamask/snaps-rpc-methods';
 import classnames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import semver from 'semver';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import {
   BlockSize,
@@ -26,6 +28,7 @@ import {
   removeSnap,
   removePermissionsFor,
   updateCaveat,
+  updateSnap,
   ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
   showKeyringSnapRemovalModal,
   getSnapAccountsById,
@@ -37,6 +40,7 @@ import {
   getPermissions,
   getPermissionSubjects,
   getTargetSubjectMetadata,
+  getSnapLatestVersion,
   ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
   getMemoizedMetaMaskIdentities,
   ///: END:ONLY_INCLUDE_IN
@@ -52,11 +56,14 @@ import {
 import SnapPermissionsList from '../../../components/app/snaps/snap-permissions-list';
 import { SnapDelineator } from '../../../components/app/snaps/snap-delineator';
 import { DelineatorType } from '../../../helpers/constants/snaps';
+import SnapUpdateAlert from '../../../components/app/snaps/snap-update-alert';
+import { CONNECT_ROUTE } from '../../../helpers/constants/routes';
 ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
 import { KeyringSnapRemovalResultStatus } from './constants';
 ///: END:ONLY_INCLUDE_IN
 
 function SnapSettings({ snapId }) {
+  const history = useHistory();
   const t = useI18nContext();
   const descriptionRef = useRef(null);
   const snaps = useSelector(getSnaps);
@@ -110,7 +117,6 @@ function SnapSettings({ snapId }) {
       })();
     }
   }, [snap?.id, identities, isKeyringSnap]);
-
   ///: END:ONLY_INCLUDE_IN
 
   const dispatch = useDispatch();
@@ -146,8 +152,37 @@ function SnapSettings({ snapId }) {
     setIsDescriptionOpen(true);
   };
 
+  const snapLatestVersion = useSelector((state) =>
+    snap ? getSnapLatestVersion(state, snap?.id) : null,
+  );
+  const checkAvailableUpdate = () => {
+    return snapLatestVersion
+      ? semver.gt(snapLatestVersion, snap.version)
+      : false;
+  };
+  const isUpdateAvailable = checkAvailableUpdate();
+  const handleUpdate = async () => {
+    const snapToInstall = {
+      [snap.id]: {
+        version: snapLatestVersion,
+      },
+    };
+    const approvalId = await dispatch(updateSnap('MetaMask', snapToInstall));
+
+    if (approvalId) {
+      history.push(`${CONNECT_ROUTE}/${approvalId}`);
+    }
+  };
+
   return (
     <Box>
+      {isUpdateAvailable && (
+        <SnapUpdateAlert
+          snapName={snapName}
+          onUpdateClick={handleUpdate}
+          bannerAlertProps={{ marginBottom: 4 }}
+        />
+      )}
       <SnapAuthorshipExpanded snapId={snap.id} snap={snap} />
       <Box className="snap-view__content__description" marginTop={[4, 7]}>
         <SnapDelineator type={DelineatorType.Description} snapName={snapName}>
