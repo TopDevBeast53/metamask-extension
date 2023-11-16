@@ -301,6 +301,9 @@ function createScriptTasks({
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
     const standardEntryPoints = ['background', 'ui', 'content-script'];
+    if (process.env.ENABLE_MV3) {
+      standardEntryPoints.push('offscreen');
+    }
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
       createFactoredBuild({
@@ -309,10 +312,14 @@ function createScriptTasks({
         buildTarget,
         buildType,
         entryFiles: standardEntryPoints.map((label) => {
-          if (label === 'content-script') {
-            return './app/vendor/trezor/content-script.js';
+          switch (label) {
+            case 'content-script':
+              return './app/vendor/trezor/content-script.js';
+            case 'offscreen':
+              return './offscreen/scripts/offscreen.ts';
+            default:
+              return `./app/scripts/${label}.js`;
           }
-          return `./app/scripts/${label}.js`;
         }),
         ignoredFiles,
         policyOnly,
@@ -371,31 +378,6 @@ function createScriptTasks({
         shouldLintFenceFiles,
       }),
     );
-
-    if (process.env.ENABLE_MV3) {
-      const offscreenSubtask = createTask(
-        `${taskPrefix}:offscreen`,
-        createOffscreenBundle({ buildTarget }),
-      );
-
-      // renderJavaScriptLoader({
-      //   groupSet: ['offscreen'],
-      //   commonSet: [],
-      //   browserPlatforms,
-      //   applyLavaMoat,
-      //   destinationFileName: 'load-offscreen.js',
-      // });
-
-      allSubtasks.push(
-        runInChildProcess(offscreenSubtask, {
-          applyLavaMoat,
-          buildType,
-          isLavaMoat,
-          policyOnly,
-          shouldLintFenceFiles,
-        }),
-      );
-    }
 
     // make a parent task that runs each task in a child thread
     return composeParallel(initiateLiveReload, ...allSubtasks);
@@ -489,35 +471,6 @@ function createScriptTasks({
         applyLavaMoat,
       }),
     );
-  }
-
-  /**
-   * Creates bundles for files needed for implementing the Offscreen document
-   * for communication with hardware wallets, snaps and potentially other
-   * implementations via the chrome.runtime API.
-   *
-   * @param {object} options - The build options.
-   * @param {BUILD_TARGETS} options.buildTarget - The current build target.
-   * @returns {Function} A function that creates the bundle.
-   */
-  function createOffscreenBundle({ buildTarget }) {
-    const bundles = [
-      createNormalBundle({
-        buildTarget,
-        buildType,
-        browserPlatforms,
-        destFilepath: `offscreen.js`,
-        entryFilepath: `./offscreen/scripts/offscreen.ts`,
-        label: 'offscreen',
-        ignoredFiles,
-        policyOnly,
-        shouldLintFenceFiles,
-        version,
-        applyLavaMoat,
-      }),
-    ];
-
-    return composeSeries(...bundles);
   }
 }
 
@@ -839,6 +792,16 @@ function createFactoredBuild({
             });
             break;
           }
+          case 'offscreen': {
+            renderJavaScriptLoader({
+              groupSet,
+              commonSet,
+              browserPlatforms,
+              applyLavaMoat,
+              destinationFileName: 'load-offscreen.js',
+            });
+            break;
+          }
           default: {
             throw new Error(
               `build/scripts - unknown groupLabel "${groupLabel}"`,
@@ -847,16 +810,6 @@ function createFactoredBuild({
         }
       }
     });
-
-    if (process.env.ENABLE_MV3) {
-      renderJavaScriptLoader({
-        groupSet: ['offscreen'],
-        commonSet: [],
-        browserPlatforms,
-        applyLavaMoat,
-        destinationFileName: 'load-offscreen.js',
-      });
-    }
 
     await createBundle(buildConfiguration, { reloadOnChange });
   };
