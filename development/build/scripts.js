@@ -300,10 +300,12 @@ function createScriptTasks({
    * each defined task.
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
-    const standardEntryPoints = ['background', 'ui', 'content-script'];
-    if (process.env.ENABLE_MV3) {
-      standardEntryPoints.push('offscreen');
-    }
+    const standardEntryPoints = [
+      'background',
+      'ui',
+      'content-script',
+      'offscreen',
+    ];
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
       createFactoredBuild({
