@@ -300,12 +300,14 @@ function createScriptTasks({
    * each defined task.
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
-    const standardEntryPoints = [
-      'background',
-      'ui',
-      'content-script',
-      'offscreen',
-    ];
+    const standardEntryPoints = ['background', 'ui', 'content-script'];
+
+    // In MV3 we will need to build our offscreen entry point bundle and any
+    // entry points for iframes that we want to lockdown with LavaMoat.
+    if (process.env.ENABLE_MV3 === 'true') {
+      standardEntryPoints.push('offscreen');
+    }
+
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
       createFactoredBuild({
