@@ -51,7 +51,7 @@ async function mockServerCalls(mockServer) {
   ];
 }
 
-describe('PPOM Blockaid Alert - Metrics', function () {
+describe('PPOM Blockaid Alert - Metrics @no-mmi', function () {
   it('Successfully track button toggle on/off', async function () {
     await withFixtures(
       {
