@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BannerAlert, IconName, Text } from '../../../component-library';
 import { TextColor } from '../../../../helpers/constants/design-system';
+import { useI18nContext } from '../../../../hooks/useI18nContext';
 
 const SnapUpdateAlert = ({ snapName, onUpdateClick, bannerAlertProps }) => {
+  const t = useI18nContext();
   return (
     <BannerAlert
-      title="Update available"
-      actionButtonLabel="Update"
+      title={t('snapUpdateAvailable')}
+      actionButtonLabel={t('update')}
       actionButtonOnClick={onUpdateClick}
       actionButtonProps={{
         endIconName: IconName.Download,
@@ -15,7 +17,7 @@ const SnapUpdateAlert = ({ snapName, onUpdateClick, bannerAlertProps }) => {
       }}
       {...bannerAlertProps}
     >
-      <Text>Get the latest version of {snapName}</Text>
+      <Text>{t('snapUpdateAlertDescription', [snapName])}</Text>
     </BannerAlert>
   );
 };
