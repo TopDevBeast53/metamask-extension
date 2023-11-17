@@ -23,7 +23,7 @@ async function mockInfuraWithMaliciousResponses(mockServer) {
               category: 'Transactions',
               security_alert_reason: 'raw_native_token_transfer',
               security_alert_response: 'Malicious',
-              ui_customizations: ['flagged_as_malicious']
+              ui_customizations: ['flagged_as_malicious'],
             },
           },
         ],
@@ -98,7 +98,6 @@ describe('Confirmation Security Alert - Blockaid @no-mmi', function () {
           windowHandles,
         );
 
-
         // Click TestDapp button for signature
         await driver.clickElement('#maliciousTradeOrder');
 
@@ -141,13 +140,18 @@ describe('Confirmation Security Alert - Blockaid @no-mmi', function () {
           properties: {
             category: events[0].properties.category,
             security_alert_reason: events[0].properties.security_alert_reason,
-            security_alert_response: events[0].properties.security_alert_response,
+            security_alert_response:
+              events[0].properties.security_alert_response,
             ui_customizations: events[0].properties.ui_customizations,
             ppom_eth_chainId_count: events[0].properties.ppom_eth_chainId_count,
-            ppom_eth_getBlockByNumber_count: events[0].properties.ppom_eth_getBlockByNumber_count,
-            ppom_debug_traceCall_count: events[0].properties.ppom_debug_traceCall_count,
-            ppom_eth_getTransactionCount_count: events[0].properties.ppom_eth_getTransactionCount_count,
-            ppom_eth_getBalance_count: events[0].properties.ppom_eth_getBalance_count,
+            ppom_eth_getBlockByNumber_count:
+              events[0].properties.ppom_eth_getBlockByNumber_count,
+            ppom_debug_traceCall_count:
+              events[0].properties.ppom_debug_traceCall_count,
+            ppom_eth_getTransactionCount_count:
+              events[0].properties.ppom_eth_getTransactionCount_count,
+            ppom_eth_getBalance_count:
+              events[0].properties.ppom_eth_getBalance_count,
             ppom_eth_getCode_count: events[0].properties.ppom_eth_getCode_count,
           },
           userId: events[0].userId,
@@ -170,16 +174,17 @@ describe('Confirmation Security Alert - Blockaid @no-mmi', function () {
         const matchSignatureRequestedEvent = {
           event: events[1].event,
           properties: {
-            security_alert_response: events[1].properties.security_alert_response,
+            security_alert_response:
+              events[1].properties.security_alert_response,
             security_alert_reason: events[1].properties.security_alert_reason,
             ppom_eth_chainId_count: events[1].properties.ppom_eth_chainId_count,
-            ppom_eth_getBlockByNumber_count: events[1].properties.ppom_eth_getBlockByNumber_count,
+            ppom_eth_getBlockByNumber_count:
+              events[1].properties.ppom_eth_getBlockByNumber_count,
             ppom_eth_call_count: events[1].properties.ppom_eth_call_count,
           },
           userId: events[1].userId,
           type: events[1].type,
-        }
-
+        };
 
         assert.equal(events.length, 2);
         assert.deepEqual(transactionAddedEvent, matchTransactionAddedEvent);
