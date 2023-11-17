@@ -20,6 +20,7 @@ import {
   Text,
   AvatarToken,
   AvatarTokenSize,
+  Icon,
 } from '../../component-library';
 import {
   Color,
@@ -84,6 +85,7 @@ export const AccountListItem = ({
   closeMenu,
   connectedAvatar,
   connectedAvatarName,
+  isPinned,
   showOptions = false,
 }) => {
   const t = useI18nContext();
@@ -170,7 +172,13 @@ export const AccountListItem = ({
             <Box
               className="multichain-account-list-item__account-name"
               marginInlineEnd={2}
+              display={Display.Flex}
+              alignItems={AlignItems.center}
+              gap={2}
             >
+              {isPinned ? (
+                <Icon name={IconName.Pin} size={IconSize.Xs} />
+              ) : null}
               <Text
                 as="button"
                 onClick={(e) => {
@@ -320,6 +328,7 @@ export const AccountListItem = ({
           isOpen={accountOptionsMenuOpen}
           isRemovable={keyring?.type !== KeyringType.hdKeyTree}
           closeMenu={closeMenu}
+          isPinned={isPinned}
         />
       ) : null}
     </Box>
@@ -359,6 +368,10 @@ AccountListItem.propTypes = {
    * Represents if the "Options" 3-dot menu should display
    */
   showOptions: PropTypes.bool,
+  /**
+   * Represents pinned accounts
+   */
+  isPinned: PropTypes.bool,
 };
 
 AccountListItem.displayName = 'AccountListItem';
