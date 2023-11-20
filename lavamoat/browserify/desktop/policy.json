@@ -1101,24 +1101,11 @@
         "@ethereumjs/tx>@ethereumjs/util": true,
         "@ethereumjs/tx>ethereum-cryptography": true,
         "@metamask/assets-controllers>@metamask/abi-utils": true,
-        "@metamask/eth-ledger-bridge-keyring>@metamask/eth-sig-util>@metamask/utils": true,
+        "@metamask/utils": true,
         "browserify>buffer": true,
         "eth-sig-util>ethereumjs-util>ethjs-util": true,
         "eth-sig-util>tweetnacl": true,
         "eth-sig-util>tweetnacl-util": true
-      }
-    },
-    "@metamask/eth-ledger-bridge-keyring>@metamask/eth-sig-util>@metamask/utils": {
-      "globals": {
-        "TextDecoder": true,
-        "TextEncoder": true
-      },
-      "packages": {
-        "@metamask/key-tree>@noble/hashes": true,
-        "browserify>buffer": true,
-        "nock>debug": true,
-        "semver": true,
-        "superstruct": true
       }
     },
     "@metamask/eth-query": {
